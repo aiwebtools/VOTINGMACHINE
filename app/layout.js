@@ -2,8 +2,8 @@ import './globals.css';
 import { Toaster } from 'sonner';
 
 export const metadata = {
-  title: 'VoteVault — Your Vote. One Ballot. One Voice.',
-  description: 'Secure voting infrastructure with one-vote-per-election enforcement, controlled election timing, and transparent live results.',
+  title: 'VoteVault — The People\'s Online Voting Machine',
+  description: 'Your Vote. One Ballot. One Voice. Secure elections with AI-verified counts, tamper-evident cryptographically signed ballots, one-vote enforcement, server-side timing, and live results.',
 };
 
 export default function RootLayout({ children }) {
