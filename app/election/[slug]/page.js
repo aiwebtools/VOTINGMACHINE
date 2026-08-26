@@ -187,8 +187,8 @@ export default function PublicElectionPage() {
                   <div className="font-mono text-xl font-black text-amber-300">{c.percentage.toFixed(1)}%</div>
                 </div>
                 <div className="mb-2 text-xs text-gray-400">{c.votes} votes</div>
-                <div className="h-3 overflow-hidden rounded-full bg-black/60">
-                  <div style={{ width: `${c.percentage}%` }} className={`h-full rounded-full bg-gradient-to-r ${['from-red-600 to-red-400', 'from-blue-600 to-blue-400', 'from-amber-500 to-amber-300', 'from-emerald-600 to-emerald-400'][i % 4]} transition-all duration-500`} />
+                <div className="result-bar h-3 overflow-hidden rounded-full bg-black/60">
+                  <div style={{ width: `${c.percentage}%` }} className={`h-full rounded-full bg-gradient-to-r ${['from-red-600 to-red-400', 'from-blue-600 to-blue-400', 'from-amber-500 to-amber-300', 'from-emerald-600 to-emerald-400'][i % 4]} transition-all duration-700`} />
                 </div>
               </div>
             ))}

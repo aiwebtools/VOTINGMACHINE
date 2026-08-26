@@ -16,10 +16,31 @@ body {
 }
 
 .grid-bg {
+  position: relative;
+  background-color: #060b1c;
   background-image:
     linear-gradient(rgba(59, 130, 246, 0.07) 1px, transparent 1px),
     linear-gradient(90deg, rgba(59, 130, 246, 0.07) 1px, transparent 1px);
   background-size: 40px 40px;
+}
+/* Moving aurora glow layer behind the grid */
+.grid-bg::before {
+  content: '';
+  position: fixed;
+  inset: -20%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(45% 45% at 15% 20%, rgba(220, 38, 38, 0.16), transparent 60%),
+    radial-gradient(45% 45% at 85% 15%, rgba(59, 130, 246, 0.18), transparent 60%),
+    radial-gradient(50% 50% at 50% 90%, rgba(251, 191, 36, 0.12), transparent 60%);
+  background-size: 200% 200%;
+  animation: aurora-move 20s ease-in-out infinite;
+}
+@keyframes aurora-move {
+  0%   { background-position: 0% 50%, 100% 50%, 50% 100%; }
+  50%  { background-position: 100% 50%, 0% 50%, 50% 0%; }
+  100% { background-position: 0% 50%, 100% 50%, 50% 100%; }
 }
 
 .glow-title {
@@ -73,4 +94,75 @@ body {
   content: ''; position: fixed; left: 0; right: 0; height: 2px; pointer-events: none; z-index: 60;
   background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.25), rgba(59, 130, 246, 0.25), transparent);
   animation: scan 10s linear infinite;
+}
+
+/* Certificate print / Save-as-PDF isolation */
+@media print {
+  body * { visibility: hidden !important; }
+  .cert-print, .cert-print * { visibility: visible !important; }
+  .cert-print { position: absolute !important; left: 0; top: 0; width: 100%; border: none !important; background: #ffffff !important; color: #111 !important; }
+  .cert-print .text-white, .cert-print h2, .cert-print td { color: #111 !important; }
+  .cert-print .text-gray-400, .cert-print .text-gray-500, .cert-print .text-gray-300 { color: #444 !important; }
+  .no-print { display: none !important; }
+  .scanline::after { display: none !important; }
+}
+
+/* ===== Visual flair (buttons, results, marquee, click sparks) ===== */
+
+/* Button press + animated sheen sweep */
+.btn-neon, .btn-blue { position: relative; overflow: hidden; }
+.btn-neon:active, .btn-blue:active { transform: translateY(1px) scale(0.98); }
+.btn-neon::after, .btn-blue::after {
+  content: ''; position: absolute; top: 0; left: -160%; width: 55%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
+  transform: skewX(-20deg); pointer-events: none;
+}
+.btn-neon:hover::after, .btn-blue:hover::after { animation: sheen 0.85s ease; }
+@keyframes sheen { from { left: -160%; } to { left: 160%; } }
+
+/* Generic clickable press feedback */
+button:active { transition: transform 0.05s; }
+
+/* Result bar: animated fill + moving shimmer */
+.result-bar { position: relative; overflow: hidden; }
+.result-bar::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
+  transform: translateX(-100%); animation: barshimmer 2.6s ease-in-out infinite;
+}
+@keyframes barshimmer { 0% { transform: translateX(-100%); } 60%,100% { transform: translateX(100%); } }
+
+/* WE THE PEOPLE marquee */
+.marquee { overflow: hidden; white-space: nowrap; }
+.marquee-track { display: inline-flex; gap: 2.5rem; padding-right: 2.5rem; animation: marquee 26s linear infinite; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* Card entrance */
+@keyframes fadeup { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.animate-fadeup { animation: fadeup 0.45s ease both; }
+
+/* Click spark burst */
+.vv-spark {
+  position: fixed; z-index: 9999; pointer-events: none; width: 16px; height: 16px;
+  border-radius: 9999px; background: radial-gradient(circle, rgba(251,191,36,0.95), rgba(239,68,68,0.6) 55%, transparent 70%);
+  transform: translate(-50%, -50%); animation: vvspark 0.55s ease-out forwards;
+  mix-blend-mode: screen;
+}
+@keyframes vvspark {
+  0%   { opacity: 0.95; transform: translate(-50%, -50%) scale(0.3); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(3); }
+}
+
+/* Shimmering gradient text for slogans */
+.shimmer-text {
+  background: linear-gradient(90deg, #fbbf24, #ffffff, #3b82f6, #ef4444, #fbbf24);
+  background-size: 300% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: shimmer-move 8s linear infinite;
+}
+@keyframes shimmer-move { from { background-position: 0% 50%; } to { background-position: 300% 50%; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .grid-bg::before, .result-bar::after, .marquee-track, .shimmer-text, .vv-spark, .live-dot, .scanline::after { animation: none !important; }
 }
